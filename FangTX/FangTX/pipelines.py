@@ -31,7 +31,7 @@ class FangtxPipeline(object):
     def open_spider(self, spider):
         # 序列化csv文件头，即第一行
         self.header = ['district','location','area', 'house_type', 'total_price', 'price',  'level', 'toward', 'floor', 'year',
-                  'company', 'person', 'phone', 'name', 'url']
+                  'name','company', 'person', 'phone',  'url']
         # 创建/打开文件
         # 获得程序运行时的日期
         date = time.strftime("%Y-%m-%d", time.localtime())

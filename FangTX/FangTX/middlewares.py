@@ -101,16 +101,9 @@ class ChangeUserAgentMiddleware(UserAgentMiddleware):
 # 在setting.py中先禁用默认的 UserAgentMiddleware
 # 定义一个自动选择类，继承UserAgentMiddleware，然后重写其方法
 class ChangeIpProxyMiddleware(object):
-
-    # 定义一个IP地址池
-    # 后续可以用程序实现自动添加
-
-
     # 初始化 注意一定是 ip=''
     def __init__(self, ip=''):
         self.ip = ip
-
-
     # 重写方法
     @classmethod
     def process_request(self, request, spider):
@@ -121,12 +114,18 @@ class ChangeIpProxyMiddleware(object):
         except Exception as e:
             print(e)
             pass
-
-    # 设置IP池
+    # 定义一个IP地址池
+    # 后续可以用程序实现自动添加
     IPPOOL = [
         {"ipaddr": "124.133.230.254:80"},
         {"ipaddr": "61.155.164.111:3128"},
         {"ipaddr": "61.135.217.7:80"},
+        {"ipaddr": "183.129.151.130:80"},
+        {"ipaddr": "61.135.217.7:80"},
+        {"ipaddr": "59.52.243.88:80"},
+        {"ipaddr": "220.160.22.115:80"},
+        {"ipaddr": "61.135.217.7:80"},
+        {"ipaddr": "106.75.176.4:80"},
         {"ipaddr": "119.164.14.20:8118"}
     ]
 
