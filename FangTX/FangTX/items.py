@@ -11,6 +11,7 @@ import scrapy
 class FangtxItem(scrapy.Item):
     # define the fields for your item here like:
     name = scrapy.Field()  # 小区名称
+    district = scrapy.Field()  # 小区位置
     location = scrapy.Field()  # 小区位置
     year = scrapy.Field()  # 小区年代
     mode = scrapy.Field()  # 小区类型

@@ -12,7 +12,8 @@ class FangTX(scrapy.Spider):
     # 爬取范围
     #allowed_domains = ["http://esf.gz.fang.com/house-a080/"]
     # 爬取开始页
-    start_urls = ["http://esf.gz.fang.com/house-a080"]
+    start_urls = ["http://esf.lz.fang.com"]
+    rooturl = start_urls[0]
 
 
     def parse(self, response):
@@ -33,7 +34,7 @@ class FangTX(scrapy.Spider):
 
                 # 爬虫进行二级页面信息提取
                 req = scrapy.Request(
-                    url = "http://esf.gz.fang.com" + url,
+                    url = self.rooturl + url,
                     meta = {'item':item},
                     callback = self.parse_info,
                     dont_filter = True
@@ -45,16 +46,12 @@ class FangTX(scrapy.Spider):
         next_page = resp.css("a#PageControl1_hlk_next").xpath("@href").extract_first()
         # 最后页面是否还有“下一页”
         if next_page is not None:
-            next_page_url = "http://esf.gz.fang.com" + next_page
+            next_page_url = self.rooturl + next_page
             # 递归调用自身，实现自动下一页爬取url
             yield scrapy.Request(
                 url = next_page_url,
                 callback = self.parse
             )
-
-
-
-
 
 
     # 爬取详细信息的方法
@@ -65,7 +62,8 @@ class FangTX(scrapy.Spider):
         # 读取详细信息
         rcont = response.xpath("//div [@class='rcont']/a/text()").extract()
         item['name'] = rcont[0]   # 小区名称
-        item['location'] = rcont[2].strip() + " " + rcont[3].strip()   # 小区位置
+        item['district'] = rcont[2].strip()   # 行政区划县区位置
+        item['location'] = rcont[3].strip()   # 片区位置
         text_item = response.xpath("//div [@class='text-item clearfix']//span [@class='rcont']/text()").extract()
 
         if len(re.findall(r'年', text_item[0])) != 0:

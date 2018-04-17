@@ -104,32 +104,52 @@ class ChangeIpProxyMiddleware(object):
 
     # 定义一个IP地址池
     # 后续可以用程序实现自动添加
-    IP_Pools = [\
-        '124.133.230.254:80'
 
 
-    ]
+    # 初始化 注意一定是 ip=''
+    def __init__(self, ip=''):
+        self.ip = ip
 
 
     # 重写方法
     @classmethod
     def process_request(self, request, spider):
-
-        with open('./ip_port.txt') as f:
-
-            for text in f.readlines():
-                text = text.strip()
-                self.ip_pool.append(text)
-
-        ip = random.choice(self.ip_pool)
-        if ip:
-            # 将爬虫的请求带上代理
-            # 在setting.py中加上相应的middleware
-            request.meta['proxy'] = 'http://' + ip
-
+        item = random.choice(self.IPPOOL)
+        try:
+            print("当前的IP是：" + item["ipaddr"])
+            request.meta["proxy"] = "http://" + item["ipaddr"]
+        except Exception as e:
+            print(e)
             pass
 
-    ip_pool = [
-        '124.133.230.254:80',
-
+    # 设置IP池
+    IPPOOL = [
+        {"ipaddr": "124.133.230.254:80"},
+        {"ipaddr": "61.155.164.111:3128"},
+        {"ipaddr": "61.135.217.7:80"},
+        {"ipaddr": "119.164.14.20:8118"}
     ]
+
+    #     with open('./ip_port.txt') as f:
+    #
+    #         for text in f.readlines():
+    #             text = text.strip()
+    #             self.ip_pool.append(text)
+    #
+    #     ip = random.choice(self.ip_pool)
+    #     if ip:
+    #         # 将爬虫的请求带上代理
+    #         # 在setting.py中加上相应的middleware
+    #         request.meta['proxy'] = 'http://' + ip
+    #
+    #         pass
+    #
+    # IP_Pools = [\
+    #     '124.133.230.254:80'
+    #
+    #
+    # ]
+    # ip_pool = [
+    #     '124.133.230.254:80',
+    #
+    # ]
