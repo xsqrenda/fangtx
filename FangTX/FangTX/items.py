@@ -8,6 +8,16 @@
 import scrapy
 
 
+class HousepriceItem(scrapy.Item):
+    # define the fields for your item here like:
+    city = scrapy.Field()  # 小区名称
+    district = scrapy.Field()  # 小区名称
+    newcode = scrapy.Field()  # 小区名称
+    lpname = scrapy.Field()  # 小区名称
+    url = scrapy.Field()  # 小区名称
+    trend = scrapy.Field()  # 小区名称
+
+
 class FangtxItem(scrapy.Item):
     # define the fields for your item here like:
     name = scrapy.Field()  # 小区名称

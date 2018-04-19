@@ -69,7 +69,8 @@ DOWNLOADER_MIDDLEWARES = {
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 # 设置处理返回数据的类及执行优先级
 ITEM_PIPELINES = {
-    'FangTX.pipelines.FangtxPipeline': 100,
+    'FangTX.pipelines.FangtxPipeline': 200,
+    'FangTX.pipelines.HousepricePipeline': 100,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

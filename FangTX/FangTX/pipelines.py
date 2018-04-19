@@ -4,19 +4,36 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-import csv
+import csv,codecs,json
 import time
 import datetime
 
-class FangtxPipeline(object):
 
 
-
+class HousepricePipeline(object):
+    def open_spider(self, spider):
+        print("打开爬虫了")
+        date = time.strftime("%Y-%m-%d", time.localtime())
+        file_dir_name = './sources/data-' + date + '.json'
+        self.file = codecs.open(file_dir_name, 'w', encoding='utf-8')
     #爬虫运行过程中执行的方法
+
     def process_item(self, item, spider):
+        print("处理数据")
+        line = json.dumps(dict(item), ensure_ascii=False) + "\n"
+        self.file.write(line)
+        return item
+    def close_spider(self, spider):
+        print("关闭爬虫了")
+        self.file.close()
 
+
+
+class FangtxPipeline(object):
+    #爬虫运行过程中执行的方法
+    # @check_spider_pipeline
+    def process_item(self, item, spider):
         try:
-
             #将数据写入csv文件
             self.writer.writerow(item)
             print('写入成功')
@@ -24,7 +41,6 @@ class FangtxPipeline(object):
         except Exception as e:
             print(Exception, e)
             pass
-
         return item
 
     # 重写方法
@@ -48,9 +64,7 @@ class FangtxPipeline(object):
         # 开始时间
         self.start_time = datetime.datetime.now()
         print("启动时间： ", str(self.start_time))
-
         pass
-
     # 重写方法
     def close_spider(self, spider):
         # 文件保存数据

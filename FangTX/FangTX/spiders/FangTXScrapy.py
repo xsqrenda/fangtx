@@ -3,7 +3,7 @@
 import scrapy
 import re
 from FangTX.items import FangtxItem
-
+from ..pipelines import FangtxPipeline
 
 
 class FangTX(scrapy.Spider):
@@ -14,6 +14,7 @@ class FangTX(scrapy.Spider):
     # 爬取开始页
     start_urls = ["http://esf.lz.fang.com"]
     rooturl = start_urls[0]
+    pipeline = set([FangtxPipeline, ])
     def parse(self, response):
         try:
             # 初始化item
