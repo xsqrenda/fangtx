@@ -13,3 +13,6 @@ def read_json_file(dir):
             pass
     except Exception as ex:
         print(ex)
+
+dir = r'E:\xsq\test\PycharmProjects\scrapy-FangTX\FangTX\sources\data-2018-04-19.json'
+read_json_file(dir.replace('\\','/'))
