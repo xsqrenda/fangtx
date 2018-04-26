@@ -4,10 +4,11 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-import csv,codecs,json
-import time
+import codecs
+import csv
 import datetime
-
+import json
+import time
 
 
 class HousepricePipeline(object):
@@ -15,18 +16,18 @@ class HousepricePipeline(object):
         print("打开爬虫了")
         date = time.strftime("%Y-%m-%d", time.localtime())
         file_dir_name = './sources/data-' + date + '.json'
-        self.file = codecs.open(file_dir_name, 'w', encoding='utf-8')
-    #爬虫运行过程中执行的方法
+        self.file = codecs.open(file_dir_name, 'a', encoding='utf-8')
+    # 爬虫运行过程中执行的方法
 
     def process_item(self, item, spider):
         print("处理数据")
         line = json.dumps(dict(item), ensure_ascii=False) + "\n"
         self.file.write(line)
         return item
+
     def close_spider(self, spider):
         print("关闭爬虫了")
         self.file.close()
-
 
 
 class FangtxPipeline(object):

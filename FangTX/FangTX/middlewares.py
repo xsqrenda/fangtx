@@ -5,12 +5,12 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-from scrapy import signals
 import random
-#引入要继承的类
+import requests
+
+from scrapy import signals
+# 引入要继承的类
 from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
-
-
 
 
 class FangtxSpiderMiddleware(object):
@@ -73,8 +73,6 @@ class ChangeUserAgentMiddleware(UserAgentMiddleware):
         ua = random.choice(self.agents)
         if ua:
             request.headers.setdefault('User-Agent', ua)
-
-
     agents = [ \
         "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1" \
         "Mozilla/5.0 (X11; CrOS i686 2268.111.0) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11", \
@@ -95,11 +93,11 @@ class ChangeUserAgentMiddleware(UserAgentMiddleware):
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24", \
         "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24"
     ]
-
-
 # 随机使用IP代理 防止爬虫被网站服务器拒绝
 # 在setting.py中先禁用默认的 UserAgentMiddleware
 # 定义一个自动选择类，继承UserAgentMiddleware，然后重写其方法
+
+
 class ChangeIpProxyMiddleware(object):
     # 初始化 注意一定是 ip=''
     def __init__(self, ip=''):
@@ -107,13 +105,20 @@ class ChangeIpProxyMiddleware(object):
     # 重写方法
     @classmethod
     def process_request(self, request, spider):
-        item = random.choice(self.IPPOOL)
-        try:
-            print("当前的IP是：" + item["ipaddr"])
-            request.meta["proxy"] = "http://" + item["ipaddr"]
-        except Exception as e:
-            print(e)
-            pass
+        with open('./ip_port.txt', 'r', encoding='utf8') as f:
+            lines = f.readlines()
+            check_ip = False
+            while not check_ip:
+                ip = random.choice(lines).strip()
+                proxies = {
+                    "http": 'http://'+ip
+                }
+                res = requests.get("http://www.gov.cn", proxies=proxies)
+                if 200 <= res.status_code < 400:
+                    check_ip = True
+            print("当前的IP是：" + ip)
+            request.meta["proxy"] = "http://" + ip
+
     # 定义一个IP地址池
     # 后续可以用程序实现自动添加
     IPPOOL = [
@@ -140,15 +145,4 @@ class ChangeIpProxyMiddleware(object):
     #         # 将爬虫的请求带上代理
     #         # 在setting.py中加上相应的middleware
     #         request.meta['proxy'] = 'http://' + ip
-    #
-    #         pass
-    #
-    # IP_Pools = [\
-    #     '124.133.230.254:80'
-    #
-    #
-    # ]
-    # ip_pool = [
-    #     '124.133.230.254:80',
-    #
-    # ]
+

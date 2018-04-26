@@ -2,4 +2,4 @@
 from scrapy import cmdline
 
 
-cmdline.execute("scrapy crawl houseprice".split())
+cmdline.execute("scrapy crawl houseprice -s LOG_FILE=scrapy.log".split())
